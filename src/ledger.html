@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19152b">
+  <title>留學帳本｜多幣別記帳</title>
+  <style>/* LEDGER_STYLES */</style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="帳本導覽">
+      <a class="brand" href="#overview" aria-label="留學帳本總覽">
+        <span class="brand-mark" data-icon="brand"></span>
+        <span>留學帳本<small>多幣別記帳</small></span>
+      </a>
+      <nav class="nav" aria-label="主要頁面">
+        <a href="#overview" data-page="overview"><span data-icon="grid"></span>總覽</a>
+        <a href="#history" data-page="history"><span data-icon="list"></span>交易紀錄</a>
+        <a href="#reports" data-page="reports"><span data-icon="chart"></span>支出統計</a>
+        <a href="#deleted" data-page="deleted"><span data-icon="trash"></span>最近刪除</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <button type="button" class="settings-link" id="open-settings"><span data-icon="settings"></span>帳本設定</button>
+        <div class="storage-state"><span></span><span id="storage-label">資料儲存於此瀏覽器</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="workspace">
+        <header class="page-header">
+          <div>
+            <h1 id="page-title">帳本總覽</h1>
+            <p id="page-caption">追蹤外幣餘額與每筆支出的實際成本。</p>
+          </div>
+          <div class="page-actions" id="page-actions">
+            <button type="button" class="button secondary" id="new-exchange"><span data-icon="exchange"></span>新增換匯</button>
+            <button type="button" class="button primary" id="new-expense"><span data-icon="plus"></span>新增消費</button>
+          </div>
+        </header>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <div id="view"></div>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="transaction-dialog" aria-labelledby="transaction-title">
+    <form id="transaction-form" novalidate>
+      <div class="dialog-head">
+        <div><h2 id="transaction-title"></h2><p id="transaction-caption"></p></div>
+        <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid" id="transaction-fields"></div>
+        <div class="form-preview" id="transaction-preview" hidden aria-live="polite"></div>
+        <p class="form-error" id="transaction-error" role="alert" hidden></p>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="button secondary" data-close>取消</button>
+        <button type="submit" class="button primary" id="save-transaction">儲存交易</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <div class="dialog-head">
+      <div><h2 id="settings-title">帳本設定</h2><p>管理我的帳本與本機備份。</p></div>
+      <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button>
+    </div>
+    <div class="dialog-body settings-body">
+      <label class="field"><span>基準貨幣</span><select id="base-currency"></select></label>
+      <p class="field-help" id="base-help"></p>
+      <div class="settings-divider">
+        <h3>備份與還原</h3>
+        <p>下載的 JSON 檔可在其他瀏覽器或裝置上匯入。</p>
+        <div class="settings-actions">
+          <button type="button" class="button secondary" id="export-data"><span data-icon="download"></span>匯出備份</button>
+          <button type="button" class="button secondary" id="import-data"><span data-icon="upload"></span>匯入備份</button>
+          <input type="file" id="backup-file" accept=".json,application/json" hidden>
+        </div>
+      </div>
+      <p class="form-error" id="settings-error" role="alert" hidden></p>
+    </div>
+    <div class="dialog-footer"><button type="button" class="button primary" data-close>完成</button></div>
+  </dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-head"><div><h2 id="confirm-title"></h2><p id="confirm-caption"></p></div>
+      <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button></div>
+    <div class="dialog-footer">
+      <button type="button" class="button secondary" data-close autofocus>取消</button>
+      <button type="button" class="button danger" id="confirm-action"></button>
+    </div>
+  </dialog>
+  <noscript><p class="notice">請在瀏覽器中啟用 JavaScript 以使用留學帳本。</p></noscript>
+  <script>
+  /* LEDGER_CORE */
+  /* LEDGER_FLAGS */
+  /* LEDGER_UI */
+  </script>
+</body>
+</html>

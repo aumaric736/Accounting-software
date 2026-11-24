@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#19152b">
+  <title>留學帳本｜多幣別記帳</title>
+  <style>:root {
+  color-scheme: light;
+  --bg: #f5f5fa;
+  --surface: #fff;
+  --text: #211b35;
+  --muted: #675f78;
+  --line: #e9e6f0;
+  --accent: #6747df;
+  --accent-dark: #5535c6;
+  --lavender: #f0eaff;
+  --nav: #1b162b;
+  --green: #13796a;
+  --danger: #b12e47;
+  --shadow: 0 3px 14px #25134a06;
+  font-family: Inter, "Microsoft JhengHei UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-size: 14px; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid #a38df4; outline-offset: 3px;
+}
+[hidden] { display: none !important; }
+h1, h2, h3, p { margin: 0; }
+svg { width: 19px; height: 19px; display: block; }
+[data-icon] { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.app { min-height: 100vh; display: grid; grid-template-columns: 224px minmax(0, 1fr); }
+.sidebar {
+  color: #e8e1f5; background: var(--nav); min-width: 0; height: 100vh; position: sticky;
+  top: 0; display: flex; flex-direction: column; padding: 32px 17px 19px;
+}
+.brand { display: flex; gap: 11px; align-items: center; margin: 0 8px; font-size: 19px; font-weight: 800; color: #fff; }
+.brand small { display: block; font-size: 11px; line-height: 1.5; margin-top: 2px; font-weight: 600;
+  color: #c0b3d5; letter-spacing: .08em; }
+.brand-mark { width: 40px; height: 40px; border-radius: 12px; color: #fff; background: #7858f0; box-shadow: 0 3px 16px #8459ea57; }
+.brand-mark svg { width: 24px; height: 24px; }
+.nav { display: grid; gap: 6px; margin-top: 45px; }
+.nav a, .settings-link {
+  display: flex; align-items: center; gap: 11px; min-height: 45px; padding: 9px 13px;
+  border: 1px solid transparent; border-radius: 9px; font-weight: 700; white-space: nowrap; color: #c9bddb;
+}
+.nav a:hover, .settings-link:hover { background: #fff1; color: white; }
+.nav a[aria-current="page"] { color: #f9f5ff; background: #382c57; border-color: #493970; }
+.nav a[aria-current="page"] [data-icon] { color: #c5b4ff; }
+.sidebar-bottom { margin-top: auto; display: grid; gap: 7px; }
+.settings-link { background: transparent; text-align: left; }
+.storage-state { display: flex; gap: 7px; align-items: center; margin: 4px 0 1px 12px; font-size: 10px; color: #bfb0d4; }
+.storage-state > span:first-child { border-radius: 100%; width: 6px; height: 6px; background: #83d4b7; }
+.main { min-width: 0; padding: 32px clamp(24px, 3.3vw, 54px) 44px; }
+.workspace { max-width: 1250px; margin: 0 auto; }
+.page-header { display: flex; gap: 18px; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-header h1 { font-size: clamp(27px, 2.6vw, 36px); line-height: 1.23; font-weight: 850; letter-spacing: -.045em; }
+.page-header p { margin-top: 7px; color: var(--muted); }
+.page-actions, .settings-actions { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 41px; padding: 9px 13px;
+  border-radius: 9px; font-weight: 750; border: 1px solid transparent; white-space: nowrap; }
+.button svg { width: 17px; height: 17px; }
+.primary { color: #fff; background: var(--accent); border-color: var(--accent); box-shadow: 0 2px 4px #6747df28; }
+.primary:hover { background: var(--accent-dark); }
+.secondary { color: var(--text); background: #fff; border-color: #e1dceb; }
+.secondary:hover { border-color: #b9a6ef; background: #faf7ff; }
+.danger { background: #a92b42; color: white; }
+.danger:hover { background: #8d2035; }
+.text-button { display: inline-flex; align-items: center; gap: 3px; padding: 4px 0; border: 0; color: var(--accent-dark); background: none; font-weight: 750; white-space: nowrap; }
+.text-button:hover { text-decoration: underline; }
+.text-button svg { width: 15px; height: 15px; }
+.notice {
+  margin: 0 0 16px; border: 1px solid #cbe9db; background: #eaf7f1; color: #186451; border-radius: 10px; padding: 10px 13px;
+}
+.notice.error { background: #fff0f2; border-color: #f5d1d8; color: var(--danger); }
+.hero {
+  position: relative; isolation: isolate; min-height: 218px; overflow: hidden; display: flex;
+  flex-direction: column; align-items: flex-start; justify-content: center; padding: 28px 34px;
+  color: #fff; background: linear-gradient(111deg, #251742 5%, #42267c 62%, #51318e 100%); border-radius: 17px;
+}
+.hero .scope { color: #e6dafc; display: flex; align-items: center; gap: 7px; font-weight: 700; }
+.scope [data-icon] svg { width: 16px; height: 16px; }
+.hero-amount { margin: 12px 0 9px; font-family: Inter, system-ui, sans-serif; font-weight: 750; font-size: clamp(32px, 5.1vw, 61px);
+  line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; max-width: 100%; }
+.hero-amount small { color: #daccf6; font-size: .30em; letter-spacing: .015em; margin-left: 4px; white-space: nowrap; }
+.hero-note { color: #e7dafd; font-size: 12px; }
+.hero-art { position: absolute; inset: 0 0 0 43%; z-index: -1; overflow: hidden; pointer-events: none;
+  background: radial-gradient(ellipse at 87% 55%, #8c65e8a0, #7b49ce00 65%); }
+.hero-art::before { content: ""; position: absolute; inset: 0; opacity: .30;
+  background-image: linear-gradient(#ac91dd5c 1px, transparent 1px), linear-gradient(90deg, #ac91dd5c 1px, transparent 1px);
+  background-size: 24px 24px; mask-image: linear-gradient(90deg, transparent, #000 72%); }
+.orbit { position: absolute; right: -10px; top: -74px; width: 365px; height: 365px;
+  border-radius: 50%; border: 1px solid #d2b9ff52; box-shadow: 0 0 0 27px #c19cff1c, 0 0 0 55px #c19cff14, inset 0 0 0 32px #c19cff14; }
+.orbit::after { content: ""; position: absolute; inset: 40px; border-radius: inherit; border: 1px dashed #d2b9ff73; }
+.coin { position: absolute; display: grid; place-items: center; border: 1px solid #e1d3ff9e;
+  color: #f9ecff; background: linear-gradient(145deg, #c19affad, #6b40bc80); box-shadow: inset 0 0 0 6px #d7b5ff29, 4px 7px 0 #38216b83, 9px 16px 38px #28115569;
+  border-radius: 27%; font: 700 56px/1 system-ui, sans-serif; }
+.coin-eur { width: 108px; height: 108px; right: 110px; top: 57px; transform: rotate(-13deg); }
+.coin-usd { width: 61px; height: 61px; right: 53px; top: 111px; transform: rotate(15deg); font-size: 32px; }
+.coin-jpy { width: 37px; height: 37px; right: 236px; top: 58px; transform: rotate(-13deg); font-size: 20px; }
+.spending-controls { position: absolute; right: 17px; top: 15px; display: flex; align-items: center; gap: 8px; }
+.spending-controls select { min-height: 34px; border: 1px solid #b99de58a; border-radius: 8px; padding: 4px 9px;
+  color: #fff; background: #36245e; }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 14px 0 17px; }
+.metric { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px; min-height: 82px; }
+.panel, .metric { border: 1px solid var(--line); background: var(--surface); border-radius: 13px; box-shadow: var(--shadow); }
+.metric-icon, .wallet-icon, .row-icon, .empty-icon { width: 39px; height: 39px; border-radius: 10px;
+  display: grid; place-items: center; flex: none; background: #f0eaff; color: #6746cd; }
+.tone-green, .wallet-icon.green { background: #e6f5ee; color: #157a65; }
+.tone-blue { background: #e9f0ff; color: #3a60b2; }
+.wallet-icon.rose { background: #fbe9f0; color: #a34671; }
+.metric-label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+.metric-value { font: 750 clamp(15px, 1.55vw, 24px)/1.2 system-ui, sans-serif; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.metric-value small { font: 650 11px/1 system-ui, sans-serif; color: var(--muted); margin-left: 3px; }
+.overview-grid { display: grid; grid-template-columns: 1.12fr 1fr; gap: 16px; margin-bottom: 16px; }
+.panel { min-width: 0; padding: 17px 18px; }
+.panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+.panel-heading h2 { font-size: 17px; font-weight: 800; line-height: 1.45; }
+.panel-heading p { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.panel-heading .text-button { font-size: 12px; }
+.empty { display: grid; justify-items: center; align-content: center; gap: 6px; text-align: center;
+  min-height: 132px; border: 1px dashed #e3dced; border-radius: 10px; padding: 13px; }
+.empty strong { font-size: 13px; }
+.empty p { color: var(--muted); font-size: 12px; line-height: 1.55; }
+.empty-icon { width: 34px; height: 34px; border-radius: 10px; margin-bottom: 2px; }
+.empty-icon svg { width: 17px; height: 17px; }
+.wallet-list { display: grid; gap: 8px; }
+.wallet-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; background: #faf9fd;
+  border: 1px solid #eeebf5; border-radius: 10px; padding: 11px; }
+.wallet-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.wallet-icon { font: 750 18px/1 system-ui, sans-serif; width: 36px; height: 36px; }
+.wallet-icon.long { font-size: 12px; }
+.wallet-name strong { font-size: 13px; display: block; }
+.wallet-name small { color: var(--muted); font-size: 11px; display: block; margin-top: 2px; overflow-wrap: anywhere; }
+.wallet-value { text-align: right; overflow-wrap: anywhere; }
+.wallet-value strong { font: 750 18px/1.3 system-ui, sans-serif; }
+.wallet-costs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px;
+  border-top: 1px solid #ede8f4; padding-top: 9px; }
+.wallet-basis { min-width: 0; padding: 8px; border-radius: 8px; background: #fff; border: 1px solid #ece7f4; }
+.wallet-basis:last-child { background: #f3edff; border-color: #e8def9; }
+.wallet-basis h3 { color: #493379; font-size: 12px; margin-bottom: 5px; }
+.wallet-basis dl { margin: 0; }
+.wallet-basis dt { color: var(--muted); font-size: 10px; }
+.wallet-basis dd { margin: 1px 0 0; font: 700 12px/1.4 system-ui, sans-serif; overflow-wrap: anywhere; }
+.wallet-basis dd + dt { margin-top: 6px; }
+.distribution { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 14px; align-items: center; min-height: 124px; }
+.donut { width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center; }
+.donut > span { width: 75px; height: 75px; background: white; border-radius: 50%; display: grid; place-content: center; text-align: center; color: var(--muted); font-size: 11px; }
+.donut strong { color: var(--text); font: 750 18px/1.1 system-ui, sans-serif; }
+.legend { display: grid; gap: 7px; min-width: 0; }
+.legend-row { display: grid; grid-template-columns: minmax(48px, 1fr) auto; align-items: center; gap: 5px; font-size: 12px; }
+.legend-row > span { display: flex; align-items: center; gap: 6px; }
+.legend-row i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.legend-row strong { text-align: right; overflow-wrap: anywhere; }
+.legend-row small { color: var(--muted); font-size: 10px; font-weight: 500; margin-left: 3px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+thead { background: #f7f5fb; color: var(--muted); }
+th, td { text-align: left; padding: 10px 9px; }
+th { font-weight: 700; font-size: 11px; }
+th:first-child { border-radius: 7px 0 0 7px; }
+th:last-child { border-radius: 0 7px 7px 0; }
+tbody tr:not(:last-child) { border-bottom: 1px solid #efedf4; }
+td small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+.row-name { display: flex; gap: 7px; align-items: center; }
+.row-name small { white-space: normal; overflow-wrap: anywhere; max-width: 230px; }
+.row-name .record-location { display: flex; align-items: flex-start; gap: 3px; }
+.record-location svg { width: 13px; height: 13px; flex: none; }
+.row-icon { width: 28px; height: 28px; border-radius: 8px; }
+.row-icon svg { width: 15px; height: 15px; }
+.amount-cell { text-align: right; font-variant-numeric: tabular-nums; }
+.amount-cell .incoming { color: var(--green); }
+.cost-toggle { display: flex; font-size: 11px; margin: 1px 0 0 auto; min-height: 24px; padding: 1px 0; }
+.cost-toggle svg { width: 13px; height: 13px; }
+.cost-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.cost-detail-row td { padding-top: 0; }
+.transaction-costs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 0;
+  padding: 8px; border-radius: 9px; border: 1px solid #ece7f4; background: #f7f3ff; white-space: normal; }
+.transaction-costs > div { padding: 2px 7px; }
+.transaction-costs dt { color: var(--muted); font-size: 11px; }
+.transaction-costs dd { margin: 2px 0 0; font-weight: 750; overflow-wrap: anywhere; }
+.table-actions { text-align: right; }
+.restore-button { min-height: 34px; padding: 5px 10px; color: var(--accent-dark); }
+.deleted-time-mobile { display: none; }
+.icon-button { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: var(--muted);
+  border: 1px solid transparent; border-radius: 7px; width: 32px; height: 32px; padding: 0; }
+.icon-button:hover { color: var(--accent-dark); background: var(--lavender); }
+.icon-button.delete:hover { color: var(--danger); background: #fff0f3; }
+.icon-button svg { width: 16px; height: 16px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 9px; align-items: end; justify-content: space-between; margin-bottom: 15px; }
+.filters { display: flex; flex-wrap: wrap; gap: 9px; }
+.filter { display: grid; gap: 3px; color: var(--muted); font-size: 11px; font-weight: 650; }
+.filter select { background: #fff; border: 1px solid #e2ddeb; border-radius: 8px; min-height: 34px;
+  color: var(--text); padding: 4px 10px; min-width: 105px; font-size: 13px; }
+.count-label { color: var(--muted); font-size: 12px; margin: 0 0 6px; }
+.toolbar-links, .trash-toolbar { align-items: center; }
+.toolbar-links { display: flex; gap: 12px; }
+.toolbar-links .count-label, .trash-toolbar .count-label { margin: 0; }
+.report-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; }
+.report-grid .panel { min-height: 228px; }
+.daily-chart { display: grid; gap: 1px; }
+.day { display: grid; grid-template-columns: 50px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 7px 0; font-size: 12px; }
+.bar-track { height: 8px; border-radius: 6px; background: #f1ecfa; overflow: hidden; }
+.bar-track span { display: block; background: #8062ed; height: 100%; border-radius: inherit; }
+dialog { padding: 0; width: min(520px, calc(100% - 26px)); max-height: calc(100% - 26px); border: 1px solid #e2d9ed;
+  border-radius: 17px; background: #fff; color: var(--text); box-shadow: 0 18px 80px #20103947; overflow: auto; }
+dialog::backdrop { background: #23183779; }
+.dialog-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 19px 20px 15px; border-bottom: 1px solid var(--line); }
+.dialog-head h2 { font-size: 21px; }
+.dialog-head p, .settings-body p { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.55; }
+.dialog-body { padding: 17px 20px; }
+.dialog-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 13px 20px; border-top: 1px solid var(--line); }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.exchange-rates { grid-column: 1 / -1; padding: 11px; background: #f7f3ff; border: 1px solid #ede4fb; border-radius: 9px; }
+.location-field { grid-column: 1 / -1; display: grid; gap: 6px; }
+.location-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.location-button { min-height: 40px; padding: 7px 9px; font-size: 12px; }
+.location-button:disabled { color: var(--muted); background: #f6f4fa; cursor: default; }
+.location-existing { justify-self: start; font-size: 12px; }
+.location-existing:disabled { color: var(--muted); cursor: default; }
+.location-help, .location-feedback { font-size: 12px; color: var(--muted); }
+.location-help a { text-decoration: underline; }
+.location-feedback.error { color: var(--danger); }
+.field { display: grid; gap: 5px; font-weight: 700; font-size: 13px; min-width: 0; }
+.field small { color: var(--muted); font-weight: 500; }
+.field.full { grid-column: 1 / -1; }
+.field input, .field select { min-width: 0; width: 100%; min-height: 40px; padding: 8px; color: var(--text); background: #fff;
+  border: 1px solid #ded7e9; border-radius: 8px; font-weight: 500; }
+.field input::placeholder { color: #827994; }
+.currency-flag { display: block; width: 23px; height: 16px; object-fit: contain; flex: none; }
+.currency-tag .currency-flag { display: inline-block; width: 18px; height: 13px;
+  margin-inline-end: .3em; vertical-align: -.12em; }
+.currency-code { white-space: nowrap; }
+.hero-amount .currency-flag { width: 21px; height: 15px; }
+.metric-value .currency-flag { width: 14px; height: 10px; }
+@supports (appearance: base-select) {
+  .flag-select, .flag-select::picker(select) { appearance: base-select; }
+  .flag-select::picker(select) { max-height: min(320px, 55vh); overflow-y: auto; padding: 4px;
+    background: #fff; color: var(--text); border: 1px solid #ded7e9; border-radius: 9px; box-shadow: 0 8px 26px #20103924; }
+  .flag-select selectedcontent, .flag-select option { display: flex; gap: 7px; align-items: center; min-width: 0; }
+  .flag-select selectedcontent span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .flag-select option { padding: 7px 8px; min-height: 32px; border-radius: 5px; }
+  .flag-select option:checked, .flag-select option:hover, .flag-select option:focus-visible { background: #f0eaff; }
+  .flag-select option::checkmark { order: 1; margin-left: auto; color: var(--accent-dark); }
+  .flag-select::picker-icon { color: var(--muted); }
+  .spending-controls .flag-select::picker-icon { color: #e7dafd; }
+  .spending-controls selectedcontent .currency-flag { width: 18px; height: 13px; }
+}
+.form-preview { background: #f3edff; color: #493379; border-radius: 8px; padding: 9px 10px; margin-top: 12px; line-height: 1.5; font-size: 13px; }
+.form-error { padding: 8px 9px; color: var(--danger) !important; background: #fff1f3; border-radius: 8px; margin-top: 10px !important; font-size: 13px; }
+.settings-divider { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
+.settings-divider h3 { font-size: 15px; }
+.settings-actions { margin-top: 10px; }
+@media (max-width: 1050px) {
+  .app { grid-template-columns: 190px minmax(0, 1fr); }
+  .sidebar { padding-left: 12px; padding-right: 12px; }
+  .overview-grid { grid-template-columns: 1fr 1fr; }
+  .distribution { grid-template-columns: 77px minmax(0, 1fr); gap: 8px; }
+  .donut { width: 77px; height: 77px; }
+  .donut > span { width: 56px; height: 56px; font-size: 9px; }
+}
+@media (max-width: 800px) {
+  .app { display: block; }
+  .sidebar { position: static; height: auto; padding: 12px 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+  .brand { margin: 0; font-size: 16px; }
+  .brand-mark { width: 33px; height: 33px; border-radius: 10px; }
+  .brand small, .storage-state { display: none; }
+  .sidebar-bottom { grid-column: 2; grid-row: 1; display: flex; gap: 5px; }
+  .settings-link { margin: 0; padding: 5px 6px; min-height: 34px; font-size: 11px; gap: 4px; }
+  .settings-link svg { width: 14px; height: 14px; }
+  .nav { grid-column: 1 / -1; display: flex; margin: 0; }
+  .nav a { min-height: 36px; padding: 4px 8px; gap: 4px; font-size: 12px; }
+  .nav a svg { width: 15px; height: 15px; }
+  .main { padding: 20px 16px 35px; }
+  .page-header { margin-bottom: 16px; }
+  .hero { min-height: 190px; }
+}
+@media (max-width: 540px) {
+  .page-header { display: grid; gap: 9px; }
+  .page-header p { font-size: 12px; }
+  .page-actions .button { min-height: 36px; font-size: 12px; }
+  .hero { padding: 45px 16px 17px; min-height: 169px; }
+  .spending-controls { right: 9px; top: 8px; gap: 5px; }
+  .spending-controls select { min-height: 27px; padding: 3px 5px; font-size: 11px; }
+  .spending-controls selectedcontent { gap: 4px; }
+  .spending-controls selectedcontent .currency-flag { width: 14px; height: 10px; }
+  .hero-amount .currency-flag { width: 16px; height: 11px; }
+  .wallet-basis .currency-tag .currency-flag { width: 14px; height: 10px; }
+  .hero-art { inset: 0 0 0 35%; opacity: .58; }
+  .coin-eur { width: 74px; height: 74px; right: 41px; top: 60px; font-size: 39px; }
+  .coin-usd { width: 43px; height: 43px; right: 12px; top: 107px; font-size: 24px; }
+  .coin-jpy { width: 27px; height: 27px; right: 131px; top: 41px; font-size: 16px; }
+  .orbit { width: 235px; height: 235px; top: -18px; right: -46px; }
+  .metrics { margin: 9px 0 12px; gap: 6px; }
+  .metric { padding: 8px; display: block; min-height: 75px; }
+  .metric-icon { width: 23px; height: 23px; border-radius: 6px; margin-bottom: 5px; }
+  .metric-icon svg { width: 14px; height: 14px; }
+  .metric-label { font-size: 10px; }
+  .metric-value { font-size: 13px; }
+  .metric-value small { font-size: 9px; }
+  .overview-grid, .report-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
+  .panel { padding: 12px; }
+  .compact-table table, .compact-table th, .deleted-table table, .deleted-table th { font-size: 10px; }
+  .compact-table th, .compact-table td, .deleted-table th, .deleted-table td { padding: 8px 5px; }
+  .compact-table th, .deleted-table th { white-space: normal; }
+  .compact-table .row-icon, .deleted-table .row-icon, .deleted-time-column { display: none; }
+  .compact-table .row-name strong, .deleted-table .row-name strong { white-space: normal; }
+  .compact-table td small, .deleted-table td small { font-size: 9px; }
+  .compact-table .currency-tag .currency-flag, .deleted-table .currency-tag .currency-flag {
+    width: 14px; height: 10px;
+  }
+  .compact-table .cost-toggle { font-size: 10px; }
+  .deleted-table .deleted-time-mobile { display: block; white-space: normal; }
+  .deleted-table .restore-button { min-height: 30px; padding: 4px 7px; }
+  .transaction-costs dt { font-size: 10px; }
+}
+@media (max-width: 360px) {
+  .location-entry { grid-template-columns: minmax(0, 1fr); }
+  .location-button { justify-self: start; }
+}
+</style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="帳本導覽">
+      <a class="brand" href="#overview" aria-label="留學帳本總覽">
+        <span class="brand-mark" data-icon="brand"></span>
+        <span>留學帳本<small>多幣別記帳</small></span>
+      </a>
+      <nav class="nav" aria-label="主要頁面">
+        <a href="#overview" data-page="overview"><span data-icon="grid"></span>總覽</a>
+        <a href="#history" data-page="history"><span data-icon="list"></span>交易紀錄</a>
+        <a href="#reports" data-page="reports"><span data-icon="chart"></span>支出統計</a>
+        <a href="#deleted" data-page="deleted"><span data-icon="trash"></span>最近刪除</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <button type="button" class="settings-link" id="open-settings"><span data-icon="settings"></span>帳本設定</button>
+        <div class="storage-state"><span></span><span id="storage-label">資料儲存於此瀏覽器</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="workspace">
+        <header class="page-header">
+          <div>
+            <h1 id="page-title">帳本總覽</h1>
+            <p id="page-caption">追蹤外幣餘額與每筆支出的實際成本。</p>
+          </div>
+          <div class="page-actions" id="page-actions">
+            <button type="button" class="button secondary" id="new-exchange"><span data-icon="exchange"></span>新增換匯</button>
+            <button type="button" class="button primary" id="new-expense"><span data-icon="plus"></span>新增消費</button>
+          </div>
+        </header>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <div id="view"></div>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="transaction-dialog" aria-labelledby="transaction-title">
+    <form id="transaction-form" novalidate>
+      <div class="dialog-head">
+        <div><h2 id="transaction-title"></h2><p id="transaction-caption"></p></div>
+        <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid" id="transaction-fields"></div>
+        <div class="form-preview" id="transaction-preview" hidden aria-live="polite"></div>
+        <p class="form-error" id="transaction-error" role="alert" hidden></p>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="button secondary" data-close>取消</button>
+        <button type="submit" class="button primary" id="save-transaction">儲存交易</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <div class="dialog-head">
+      <div><h2 id="settings-title">帳本設定</h2><p>管理我的帳本與本機備份。</p></div>
+      <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button>
+    </div>
+    <div class="dialog-body settings-body">
+      <label class="field"><span>基準貨幣</span><select id="base-currency"></select></label>
+      <p class="field-help" id="base-help"></p>
+      <div class="settings-divider">
+        <h3>備份與還原</h3>
+        <p>下載的 JSON 檔可在其他瀏覽器或裝置上匯入。</p>
+        <div class="settings-actions">
+          <button type="button" class="button secondary" id="export-data"><span data-icon="download"></span>匯出備份</button>
+          <button type="button" class="button secondary" id="import-data"><span data-icon="upload"></span>匯入備份</button>
+          <input type="file" id="backup-file" accept=".json,application/json" hidden>
+        </div>
+      </div>
+      <p class="form-error" id="settings-error" role="alert" hidden></p>
+    </div>
+    <div class="dialog-footer"><button type="button" class="button primary" data-close>完成</button></div>
+  </dialog>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-head"><div><h2 id="confirm-title"></h2><p id="confirm-caption"></p></div>
+      <button type="button" class="icon-button" data-close aria-label="關閉"><span data-icon="close"></span></button></div>
+    <div class="dialog-footer">
+      <button type="button" class="button secondary" data-close autofocus>取消</button>
+      <button type="button" class="button danger" id="confirm-action"></button>
+    </div>
+  </dialog>
+  <noscript><p class="notice">請在瀏覽器中啟用 JavaScript 以使用留學帳本。</p></noscript>
+  <script>
+  const currencies = {
+  CNY: ['人民幣', '¥', 2, 'rose'], EUR: ['歐元', '€', 2, 'violet'],
+  USD: ['美元', '$', 2, 'green'], JPY: ['日圓', '¥', 0, 'rose'],
+  TWD: ['新臺幣', 'NT$', 2, 'green'], GBP: ['英鎊', '£', 2, 'violet'],
+  HKD: ['港幣', 'HK$', 2, 'rose'], CAD: ['加幣', 'C$', 2, 'rose'],
+  AUD: ['澳幣', 'A$', 2, 'green'], SGD: ['新加坡幣', 'S$', 2, 'green'],
+  KRW: ['韓元', '₩', 0, 'violet'], CHF: ['瑞士法郎', 'CHF', 2, 'rose'],
+  NZD: ['紐西蘭幣', 'NZ$', 2, 'green'], INR: ['印度盧比', '₹', 2, 'violet'],
+  MYR: ['馬來西亞令吉', 'RM', 2, 'green'], THB: ['泰銖', '฿', 2, 'violet'],
+  VND: ['越南盾', '₫', 0, 'rose'], PHP: ['菲律賓披索', '₱', 2, 'violet']
+};
+const categories = {
+  food: ['餐飲', '#7658ed'], transit: ['交通', '#27aa93'], housing: ['住宿', '#edaa51'],
+  tuition: ['學習', '#5099ef'], shopping: ['購物', '#e87db1'], leisure: ['娛樂', '#9b72d5'],
+  health: ['醫療', '#ee797c'], other: ['其他', '#7b8ba9']
+};
+const has = (object, key) => Object.hasOwn(object, key);
+const isCurrency = code => typeof code === 'string' && has(currencies, code);
+const group = new Intl.NumberFormat('zh-TW');
+const scale = currency => 10n ** BigInt(currencies[currency][2]);
+const ratePlaces = 12;
+const rateScale = 10n ** BigInt(ratePlaces);
+const bookVersion = 3;
+const maxPlaceLength = 120;
+const emptyBook = (base = 'CNY') => ({ version: bookVersion, base, entries: [] });
+const isActive = row => row.deletedAt === undefined;
+
+function validCoordinates(point) {
+  return point && Number.isFinite(point.latitude) && Math.abs(point.latitude) <= 90 &&
+    Number.isFinite(point.longitude) && Math.abs(point.longitude) <= 180 &&
+    (point.accuracy === undefined || (Number.isFinite(point.accuracy) && point.accuracy >= 0));
+}
+
+function dateKey(date = new Date()) {
+  const year = String(date.getFullYear()).padStart(4, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
+function validDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(value + 'T12:00:00');
+  return Number.isFinite(date.getTime()) && dateKey(date) === value && value.slice(0, 4) !== '0000';
+}
+
+function scaledDecimal(value, places) {
+  const [whole, fraction = ''] = value.split('.');
+  return BigInt(whole) * (10n ** BigInt(places)) + BigInt(fraction.padEnd(places, '0') || '0');
+}
+
+function readAmount(value, currency, label, allowZero = false) {
+  const clean = value.trim();
+  const places = currencies[currency][2];
+  const pattern = places ? /^\d{1,12}(?:\.\d{1,2})?$/ : /^\d{1,12}$/;
+  if (!pattern.test(clean)) {
+    const limit = places ? '12 位整數及 2 位小數' : '12 位整數';
+    throw new Error(label + '的格式有誤，最多輸入 ' + limit + '。');
+  }
+  const amount = scaledDecimal(clean, places);
+  if (amount === 0n && !allowZero) throw new Error(label + '必須大於 0。');
+  return amount.toString();
+}
+
+function readRate(value, currency, base) {
+  const clean = (value ?? '').trim();
+  const label = currency + ' 兌 ' + base + ' 的匯率';
+  if (!clean) throw new Error('請輸入 ' + label + '。');
+  if (!/^(?:\d{1,12}(?:\.\d{1,12})?|\.\d{1,12})$/.test(clean)) {
+    throw new Error(label + '最多可輸入 12 位整數及 12 位小數。');
+  }
+  const rate = scaledDecimal(clean, ratePlaces);
+  if (rate === 0n) throw new Error(label + '必須大於 0。');
+  return rate.toString();
+}
+
+function decimal(amount, places, grouped = true, trim = false) {
+  const factor = 10n ** BigInt(places);
+  const sign = amount < 0n ? '−' : '';
+  const positive = amount < 0n ? -amount : amount;
+  const whole = positive / factor;
+  let fraction = places ? String(positive % factor).padStart(places, '0') : '';
+  if (trim) fraction = fraction.replace(/0+$/, '');
+  return sign + (grouped ? group.format(whole) : String(whole)) + (fraction ? '.' + fraction : '');
+}
+
+const number = (amount, currency) => decimal(amount, currencies[currency][2]);
+const inputAmount = (amount, currency) => decimal(BigInt(amount), currencies[currency][2], false, true);
+const rateText = value => decimal(BigInt(value), ratePlaces, false, true);
+const money = (amount, currency) => currency + ' ' + number(amount, currency);
+const rounded = (numerator, denominator) => (numerator + denominator / 2n) / denominator;
+const balanceCost = (wallet, basis = wallet.withFees) => rounded(wallet.units * basis.numerator, basis.denominator);
+const percent = (part, total) => total ? Number(rounded(part * 1000n, total)) / 10 : 0;
+
+function averageCostAmount(wallet, currency, base, basis = wallet.withFees) {
+  if (!wallet.units) return null;
+  const precision = 7;
+  const amount = rounded(basis.numerator * scale(currency) * (10n ** BigInt(precision)),
+    basis.denominator * scale(base));
+  return decimal(amount, precision, true, true);
+}
+
+function gcd(left, right) {
+  while (right) {
+    [left, right] = [right, left % right];
+  }
+  return left;
+}
+
+function paymentRateCurrencies(principalCurrency, feeCurrency, hasFee, base) {
+  const paid = hasFee ? [principalCurrency, feeCurrency] : [principalCurrency];
+  return [...new Set(paid)].filter(currency => currency !== base);
+}
+
+function exchangeCosts(row, base) {
+  const principalScale = scale(row.principalCurrency);
+  const feeScale = scale(row.feeCurrency);
+  const rate = currency => currency === base ? rateScale : BigInt(row.rates[currency]);
+  const principal = BigInt(row.principal) * rate(row.principalCurrency) * scale(base);
+  const fee = BigInt(row.fee);
+  const feeCost = fee ? fee * rate(row.feeCurrency) * scale(base) : 0n;
+  return {
+    beforeFees: rounded(principal, rateScale * principalScale),
+    withFees: rounded(principal * feeScale + feeCost * principalScale, rateScale * principalScale * feeScale)
+  };
+}
+
+function acquire(basis, balance, updatedBalance, cost) {
+  const numerator = balance * basis.numerator + cost * basis.denominator;
+  const denominator = updatedBalance * basis.denominator;
+  const divisor = gcd(numerator, denominator);
+  return { numerator: numerator / divisor, denominator: denominator / divisor };
+}
+
+function calculate(book) {
+  const wallets = new Map();
+  const rows = [];
+  // Sorting is stable. Entries on the same date retain their original recording order.
+  const entries = book.entries.filter(isActive).sort((a, b) => a.date.localeCompare(b.date));
+  const zeroBasis = { numerator: 0n, denominator: 1n };
+  for (const entry of entries) {
+    const amount = BigInt(entry.amount);
+    const wallet = wallets.get(entry.currency) ?? { units: 0n, beforeFees: zeroBasis, withFees: zeroBasis };
+    let costBeforeFees;
+    let cost;
+    if (entry.type === 'exchange') {
+      const costs = exchangeCosts(entry, book.base);
+      const units = wallet.units + amount;
+      wallet.beforeFees = acquire(wallet.beforeFees, wallet.units, units, costs.beforeFees);
+      wallet.withFees = acquire(wallet.withFees, wallet.units, units, costs.withFees);
+      wallet.units = units;
+      costBeforeFees = costs.beforeFees;
+      cost = costs.withFees;
+    } else {
+      if (amount > wallet.units) {
+        throw new Error(entry.date + ' 的 ' + entry.currency + ' 消費餘額不足（可用 ' +
+          money(wallet.units, entry.currency) + '，消費 ' + money(amount, entry.currency) + '）。');
+      }
+      const before = balanceCost(wallet);
+      const beforeWithoutFees = balanceCost(wallet, wallet.beforeFees);
+      wallet.units -= amount;
+      // Allocate the difference in rounded balances to keep the ledger balanced to the smallest unit.
+      cost = before - balanceCost(wallet);
+      costBeforeFees = beforeWithoutFees - balanceCost(wallet, wallet.beforeFees);
+    }
+    wallets.set(entry.currency, wallet);
+    rows.push({ ...entry, cost, costBeforeFees, balance: wallet.units, remaining: balanceCost(wallet) });
+  }
+  return { wallets, rows };
+}
+
+function validateBook(book) {
+  if (!book || ![1, 2, bookVersion].includes(book.version) || !isCurrency(book.base) || !Array.isArray(book.entries)) {
+    throw new Error('備份格式不符。請選擇由此工具匯出的 JSON 檔。');
+  }
+  const ids = new Set();
+  const entries = [];
+  const validMinor = (value, currency, allowZero = false) =>
+    typeof value === 'string' && /^\d{1,14}$/.test(value) &&
+    (allowZero || BigInt(value) > 0n) && BigInt(value) < 10n ** 12n * scale(currency);
+  for (const savedRow of book.entries) {
+    let row = savedRow;
+    if (!row || typeof row.id !== 'string' || !row.id || ids.has(row.id) ||
+        !validDate(row.date) || !isCurrency(row.currency) || row.currency === book.base ||
+        !validMinor(row.amount, row.currency) || typeof row.note !== 'string' || row.note.length > 100 ||
+        !['exchange', 'expense'].includes(row.type)) {
+      throw new Error('備份中的交易格式不符。');
+    }
+    if (!isActive(row)) {
+      const deletedAt = typeof row.deletedAt === 'string' ? Date.parse(row.deletedAt) : NaN;
+      if (!Number.isFinite(deletedAt) || new Date(deletedAt).toISOString() !== row.deletedAt) {
+        throw new Error('備份中的刪除時間有誤。');
+      }
+    }
+    if (row.type === 'exchange') {
+      if (book.version === 1) {
+        row = { ...row, principalCurrency: book.base, feeCurrency: book.base, rates: {} };
+      }
+      if (!isCurrency(row.principalCurrency) || !isCurrency(row.feeCurrency) ||
+          !validMinor(row.principal, row.principalCurrency) || !validMinor(row.fee, row.feeCurrency, true)) {
+        throw new Error('備份中的換匯本金或手續費有誤。');
+      }
+      const required = paymentRateCurrencies(row.principalCurrency, row.feeCurrency, BigInt(row.fee) > 0n, book.base);
+      const rates = row.rates;
+      if (!rates || typeof rates !== 'object' || Array.isArray(rates) ||
+          Object.keys(rates).length !== required.length || !required.every(currency =>
+            has(rates, currency) && typeof rates[currency] === 'string' && /^[1-9]\d{0,23}$/.test(rates[currency]))) {
+        throw new Error('備份中的換匯匯率有誤或缺少。');
+      }
+    }
+    if (row.type === 'expense' && !has(categories, row.category)) {
+      throw new Error('備份中的消費類別有誤。');
+    }
+    if ((row.place !== undefined && (typeof row.place !== 'string' || row.place.length > maxPlaceLength)) ||
+        (row.coordinates !== undefined && !validCoordinates(row.coordinates))) {
+      throw new Error('備份中的交易地點有誤。');
+    }
+    ids.add(row.id);
+    entries.push(row);
+  }
+  const updated = { ...book, version: bookVersion, entries };
+  calculate(updated);
+  return updated;
+}
+
+  // Flag images (public domain): https://flagpedia.net/download
+const currencyFlags = {
+  "CNY": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAOVBMVEXuHCX3jRL//wDuISPyURvvLCH6ugrwPh7xSRz0ZxjwNyD1ehX+6QP7wgn/+AH5ow793wX3lhHzXBqicYSuAAAAX0lEQVQYGe3BSRKCQBAAweplVgYB//9YY/QMdHgmk7+kxB1janvhhjD5mzvD+XHn3CKbriIJsG3lXMqqOipTMa4MVSegvo5d+KqdC61gwmQ5GyG9E+ALMS0XYhKPR9wHPPwBnsz8tAoAAAAASUVORK5CYII=",
+  "EUR": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAANlBMVEUAM5k1Unj4yAJQY2gbQ4dWZ2MmSYEKOJLmvQwBM5dIXm1DW290eFCNh0LvwwedkDqwnC1pclj9NsmTAAAAiklEQVQ4y82TyQ7DIBBDzQyzELL+/8/2kChKGjqt2kPjm8WTEZYBbqWUPoGAPI4ZqDEntADMwEISgjptSXXSAMuh3VUG746+86G0yd5PB+b9i0grFtgvZJdCpBlpTk+NKHmTlGsi/7qG/xa+P9Piwuu83c5zPMhEsi5cKJ65Zl0Xrlnft8R8rz/8AMaKAyoFhDUUAAAAAElFTkSuQmCC",
+  "USD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAVBAMAAADGNLEtAAAALVBMVEX////GU3LZjKGzGUINM2PsxtAYPWotT3hed5enma46WoBPa46zGkMkR3Jrgp+6ntXWAAAAiklEQVQY02Nwc0lJcQMSxghgw+CRVdaWkVXWooQEGFxaPLxKWjxcGJCBn1fJExAWRAJglUuAKlEEPdyXgA1A0e62LTu9bFt2CopF3iCh9LItKE5yX5tVe31tVgmq9pL0NLcy95RQJMAAdiUQo2ifCQUoKrECY0xgw6CEBWDXLogFYBfECrBahM1JAItMTcEiMDpsAAAAAElFTkSuQmCC",
+  "JPY": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAOVBMVEW8AC3dfJPMPF7ILFHQTGvuvcjADzn////55urjkaXyzte9BTHqrbvDHEP++fr77/Hst8PmobHXZ4H4lhdsAAAAcUlEQVQ4y9XTuw6AIAyF4XKVclXf/2FNjDF0OMjgwj9/YWgLbZPRkjA4Zhc+YbB0Z8MYHp6efB7BmOgtRQyroQ6aCmEm0Q6hklBBqCXUEHoJPYRm9kUr4QkhS8gQttK70vBmHM1tRkyS/7me+Xtc+hdeTWcZDIhvaeAAAAAASUVORK5CYII=",
+  "TWD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAPFBMVEX+AAAAAJSAAEqbm9YNDZm2tuH+/v8uLqdOTrQ/P651dcUeHqBtbcHBwebs7PeBAUrn5/Tm5vTT0+3Q0OxOVgUiAAAAaUlEQVQ4y+2RSwqAMAxEq5NpE+vf+9/VunClkgoufQSyeQwkE5obwh1vxdSkMjUi+56+KJ1iGKCdeImJc4zLGfksGhgLhHmJGYeI7B4DchxJuMeIbMBalvseM1XTqmayfFTh1F4JPz817I2ZAvisYi9BAAAAAElFTkSuQmCC",
+  "GBP": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAANlBMVEX////w8vfyxcx8jbJCWpAOLHFVa5sBIWnIEC7WTGLnv8qAkLTheYpecqHx0digrMfz3+T21dqBS5WQAAAApUlEQVQoz8WTyxpFMAyEpyqOuhTv/7IntImmurAzC59kfsIIhA5wnn6iASMLgzbIT2Fk6joUaAUKBsiJm+kJ0iyuR1mQBam8Cex1dINkZ6EesSZwrR8JfdYWl7AcbCRw5ypytYmPpy6w3X6jL8HXL6PxOODgTPYEcnXmFe94cuBsdJzwpIFrRwK3WPkJLQqL2aUoUVisXjOvLizWWNyMVljrV0gz/wdhEi0lRIbcAAAAAElFTkSuQmCC",
+  "HKD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAVFBMVEXuHCX1eH794+T3mJzyU1rxRUv2io7/////+fn//v7uJC32g4j7vsH5pqn6t7rwOkL81dfzXGL/9PX0bnT3kJX7y8393N3+7e71fYLzY2nwNT35sLPTyISVAAAAmUlEQVQYGe3B13XDMBAEwEXcOyQSzJb679NugBC/9TyDbzeZjieycsIDQUmPBxyrVnwQABS7MPacPe75eWs/zcq188+ccKeTIpdcUeczkxF3JtXK1Znc3xSJBrccRawPoRlXPEaM1aOG1S024YOw+lZWXSrGXgsp+1sOTRiKdMp4SqPHSD94sqRNyAkjYZfZAHjZgme2hH/AL5JVBleYonGCAAAAAElFTkSuQmCC",
+  "CAD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAASFBMVEX/////ubn/oqL/Z2f/Jib/09P/7e3/AAD/+/v/Gxv/W1v/rq7/eXn/nZ3/DAz/OTn/AwP/Pj7//Pz/QED/PT3/g4P/xsb/xcWY5npoAAAAkUlEQVQoz43TyQ7DIAxFUQbDNZCx4///aTdt00ohsXdPHIFsGce33E79nO5AvRjhGCxQVYs41fMbpUIVw9MzwHwKk4sA0aUj6IdW7iNAGEobfBfmBbgC3IAld6HKllhEuzDwV6HfjJ+2OPmjrlP5pJKOx5PfsuSTOWZZY61xlWxYiufDuD3eG2FrRpiSEe5+hRcblQ+AegtNbgAAAABJRU5ErkJggg==",
+  "AUD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAAdVBMVEUBIWn+/v8LKm8rRoLsS2lZa5sCI2rkACvAyNojP317jLGrtc2qtc3FzN1fc6FBWY/5w83ecIr+8vQRL3P5x9DY3ejU2OVeZpZLVIn709oYNndNZJacqcWLmrra3unVZ4Xy9Pj22uFEXJHIz94VM3XUZYPb3+rlcwqvAAAAz0lEQVQoz7WQyRKDIBBEB2STRHHfTdQs//+JQVxiSlNFDunLAPOomW4gycVnAHDi/KwLoyEJ4EjFgyQpXcBcY54C+IpmdAQNNmxavv8+C62sLyPEeVRGXTbelx72BF5BfqC16bpgB25lRnd6KucoKvuP0UaOdObT4CUkzEczNA3ItZheq2oxhKYUlMHmeNiK4ps3+7jXzFSN0W3g/jMgY5WSwS+i1BLcBrS4c6x+xrJpZGxDtgi1NpwSCAlls44rxG5vfEnxHozjvUFaw//0ApepC3HnUeodAAAAAElFTkSuQmCC",
+  "SGD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAPFBMVEXtKTnvRFL5srj3oajvPEryW2fuM0L////2k5vtKjr1hY30doH+6On2lJzzbXjwTlv6wcb7ztL82Nv/9/iW1qa7AAAAe0lEQVQ4y+3RORIDIQxE0Q9IaATMfv+7OnDgyINyu+NXqmo1TijOG3pSicB9DAWZwn6fAi3XCazDNoStPdx0HNRu12OHevRH2OxCSgWaPsJuA/DPD77BZCakkmrRSetimXQKeZtAv6wHl9nXrDUCA1uvSygrFswf/g58AZjBEs/aTMUHAAAAAElFTkSuQmCC",
+  "KRW": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbCAMAAAA5zj1cAAAAvVBMVEX///8AR6DNLjrt7e6cnJwKCgoaGhrY2NiMjIxAQEB5eXmvr6+8vLyEhIQdQ5IgICCYmJivMUn59vfExMQ6OjrGxsaJiYlkZGReXl5wcHDQR1P55OYMT6TyyczH1ur+/f0RERGVlZWhoaEhISFoiLzZ4/HmvsZnOWx7n84HRZzlk5rOND/FLj3109XOMT3Ozs5HR0ff398zMzMgXqyFNl3dcXmWkrfkjpVKPXvCgpUmYq65zOXIqLuwvtqfudvB4UIoAAABKklEQVQ4y7WTWXeCMBCFmZCEQEBRW8oiKuC+Vbvv//9nFdLIaRPl+GDvS3KG73CTmRvD+D9Zpl4zLb02vHN6aq3nXOkgawfU/fNT06WsjVVuTzjB5PZ36ZpkJA9UczvahXb0s082XbHe2OFONccFpgGtvifLGCH0mFTeDqe5Yo75yCduuUlXSGiVCnOfcuWUlmeH5TLdIqltKsw9vUGsvHI3RrXiypydaPr0QHXWCG0apvMksRYsZmjZAI4fJFfq5bkBnMNsLTmA1wZwALCQGMDHCai6tfEGtVrDo7eWfRz0a/DzaB/rydTkVxUz4o+UyeQFo5mYtTm/B+iP38WsXZqpQbMjzg7pmUwMmR7GtejuyzT6ah59grU8Gqzw9IR7esLPfzNnv8KL6RtMsRLeZtvj3wAAAABJRU5ErkJggg==",
+  "CHF": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAAElBMVEX/AAD/////wMD/gID/YGD/8PBDRn5nAAAANklEQVQoz2NgGLzA2djYBENQUVBQaJALsigBQaCgoCiIdoAKMgsiAQN6C2J10lAJT9yJYfAAAHGvEL146aHXAAAAAElFTkSuQmCC",
+  "NZD": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAAclBMVEUBIWn68/artc2qtc0OLXHYVmtbbZzIEC7AyNrPd4z0zdPPZXskQX1dZpT12N3yxs0CImpGV4w+T4bGboXFzN3U2OXVUWja3uk6R4DLRl4wSINtapYjO3nX3Of8/P1EXJFYWovJaYDMJkKkdJGceZnYV2wLvzvsAAAAuElEQVQoz9WQWxOCIBCFlxIIBMRral6yy///iwmK5WQNLz10XnZhvzlndqHgR6IBYEfpfiyasILDluIU85Y4UDIcZTHARzQnBrRY/zIKgmd/GJUrhTpKkUIoN283E8MgFpBuaBkyBn7gWzQaUyntkFKraKtz7bo+45hJswxpI5y6nU+zaRFOtnHG70zO59EWTcz/7SInsiynOrqtD36MsDW8CvgqDX+mpvHjkqpK/Mgw9IwW9Q/3egATpQmIac+/QgAAAABJRU5ErkJggg==",
+  "INR": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbBAMAAAD8PtBdAAAAMFBMVEUEajj/aCD////f3/GpqNhPTa7MzOiOjMthX7f5+fxubLyFg8b4+Py+veF1dMD9/f41r+HyAAAATElEQVQoz2MQxAIYhoqgEhRoloZPgrHhgqZuKcEYgotNnK3QBfXb/J5koAsq722NuG2Ern2Z95YsDDOLTZzNMQRPuKX0YAiiuHMoAwA5/S6KfoLQ6QAAAABJRU5ErkJggg==",
+  "MYR": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAAP1BMVEUAAGbPNjkWElwtJFPlf3/YPz9mADPyv7/////MAAD+ywBKO0hkUD3tvQd5YTXPpRKZeiiLby4NCmC1kR2kgyQNwyLcAAAAiElEQVQoz62ROw7DQAgFJ2AnMftf+/5nTWFLSYHWW2Q6xBMjABw2h6ulrYZvcHE4Oy0F6F36Wb4cAMhJAYkxylhtFSCUVMJwoloEtJpZ1VFQrAESk6UsQ/VegB5yy2M1Ug4AVb07T99Lvja+OThdfz7zduDp4KofDquDq3HV6yTzwf+rl0mm1R+RJBEw0tYURgAAAABJRU5ErkJggg==",
+  "THB": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbAgMAAABzfiX9AAAADFBMVEUtKkqlGTHMh5T09fiioZ6bAAAAIElEQVQY02MIhQMGgsxVcMDwHw4IM+kASHEOki9I8DwAW5h3iXM3AMAAAAAASUVORK5CYII=",
+  "VND": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAbBAMAAAD8PtBdAAAAMFBMVEX/AAD/6wD/1QD/OAD/ggD/SgD/nAD/4QD/GgD/6gD/WgD/CQD/vAD/kwD/IgD/QQDiVXETAAAAY0lEQVQoz2NgoDvg3oBFkDUAiyBbAhbB7dVYBANFsQhelEUX6REEgxOoop4gsSloSvkVBQWFDNAN6BQUnIFhj6GgoDCGoKOQogiGoGL2NiF0MeYqBobl6BZxPWBg4FvAMGgBAGCuDd0kl5lmAAAAAElFTkSuQmCC",
+  "PHP": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAMAAADImI+JAAAAhFBMVEX////80RT+8bf95Xj/+dz+7qj9314AOKjOESb//Or93Ej81Sz39PfQGi7++vb+6Y3gaHV5l9LTKj07ZbwRRa4IPquou+LM1+7m6/f75+nplZnXPU7+65r+6Iz///siUrP/9tLtqbDkfon1y9BihMn209dZfcbaS1vvsbjCz+qVqtD20NSywA8qAAAAnUlEQVQoz43QyRaCQAxE0Qc0mICgIiKKCs7T//+fC5WNQnet70kq4d6MnALZo3CCmmh1cprYKiznDvCdsnGDyni2cIAmAKqLDQah2WpkhqsCmChOYn8HUBYD0A8jz/PCjYI/6a36Aw+p/E23OtwB7HORftgdc6xFhuDnPaupiA2iZOtUHCC3XMQCW4XzVWxBEx0u1020lfvCZy1OeQEPchhbsTsymgAAAABJRU5ErkJggg=="
+};
+  const icons = {
+  brand: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h10m-3-3 3 3-3 3m3 2H7"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/>',
+  list: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  chart: '<path d="M3 4v16h18M8 15v-4m5 4V7m5 8V5"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1"/><circle cx="12" cy="12" r="7"/>',
+  exchange: '<path d="M4 8h15m-4-4 4 4-4 4m5 4H5m4-4-4 4 4 4"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  arrow: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
+  close: '<path d="m6 6 12 12M18 6 6 18"/>',
+  download: '<path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/>',
+  upload: '<path d="M12 15V3M7 8l5-5 5 5M4 16v4h16v-4"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3"/>',
+  wallet: '<path d="M20 8V6a2 2 0 0 0-2-2l-12 2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M4 8h14a2 2 0 0 1 2 2v2"/><path d="M22 12h-6a2 2 0 1 0 0 4h6z"/>',
+  layer: '<path d="m12 3 9 5-9 5-9-5 9-5zm-9 9 9 5 9-5M3 16l9 5 9-5"/>',
+  receipt: '<path d="M5 4l2 1 2-1 3 1 3-1 2 1 2-1v16l-2-1-2 1-3-1-3 1-2-1-2 1zM9 9h6m-6 4h6"/>',
+  pie: '<path d="M11 3a9 9 0 1 0 10 10h-10z"/><path d="M14 3v7h7a8 8 0 0 0-7-7z"/>',
+  pin: '<path d="M19 10c0 5-7 11-7 11s-7-6-7-11a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.4"/>',
+  edit: '<path d="m14 6 4 4M5 19l4-.8L19 8l-3-3L6 15z"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13m-6 3v6m2-6v6"/>'
+};
+const byId = id => document.getElementById(id);
+const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + icons[name] + '</svg>';
+const esc = value => String(value).replace(/[&<>"']/g, char =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+const flagImage = code => '<img class="currency-flag" src="' + currencyFlags[code] + '" alt="">';
+const currencyTag = (code, label = code) =>
+  '<span class="currency-tag' + (label === code ? ' currency-code' : '') + '" data-currency="' + code + '">' +
+  flagImage(code) + '<span>' + esc(label) + '</span></span>';
+const flaggedAmount = (amount, code, sign = '') => currencyTag(code, sign + money(amount, code));
+const flaggedNumber = (amount, code) => currencyTag(code, number(amount, code));
+const currencyText = text => String(text ?? '').split(/\b([A-Z]{3})\b/g)
+  .map(part => isCurrency(part) ? currencyTag(part) : esc(part)).join('');
+const captions = {
+  overview: ['帳本總覽', '追蹤外幣餘額與每筆支出的實際成本。'],
+  history: ['交易紀錄', '查閱每筆換匯與消費，按月份和幣別篩選。'],
+  reports: ['支出統計', '按月份查看每天支出與消費類別。'],
+  deleted: ['最近刪除', '復原誤刪的交易，帳本會重新計算成本與餘額。']
+};
+const deletedTime = new Intl.DateTimeFormat('zh-TW', { dateStyle: 'short', timeStyle: 'short' });
+const storageKey = 'study-abroad-ledger-v1';
+const todayMonth = () => dateKey().slice(0, 7);
+let personal = emptyBook();
+let month = todayMonth();
+let spendingCurrency = '';
+let filters = { month: '', type: '', currency: '' };
+let storageText = null;
+let storageAllowed = true;
+let storageCorrupt = false;
+let transaction = null;
+let confirmation = null;
+let noticeTimer;
+
+function notice(message, error = false) {
+  window.clearTimeout(noticeTimer);
+  const element = byId('notice');
+  element.innerHTML = currencyText(message);
+  element.classList.toggle('error', error);
+  element.hidden = !message;
+  if (message && !error) noticeTimer = window.setTimeout(() => { element.hidden = true; }, 4700);
+}
+
+function storageStatus() {
+  byId('storage-label').textContent = storageCorrupt ? '本機帳本需要還原' :
+    storageAllowed ? '資料儲存於此瀏覽器' : '僅暫存在此視窗';
+}
+
+function loadLocal(raw) {
+  storageText = raw;
+  try {
+    personal = raw ? validateBook(JSON.parse(raw)) : emptyBook();
+    storageCorrupt = false;
+  } catch {
+    storageCorrupt = true;
+    notice('本機帳本無法讀取。可以從「帳本設定」匯入備份。', true);
+  }
+  storageStatus();
+}
+
+function saveBook(book, restore = false) {
+  if (storageCorrupt && !restore) throw new Error('請先從「帳本設定」還原備份。');
+  if (storageAllowed) {
+    let current;
+    try {
+      current = localStorage.getItem(storageKey);
+    } catch {
+      storageAllowed = false;
+    }
+    if (storageAllowed && current !== storageText) {
+      loadLocal(current);
+      render();
+      throw new Error('另一個分頁已更新帳本，請關閉視窗後重新操作。');
+    }
+    if (storageAllowed) {
+      const raw = JSON.stringify(book);
+      try {
+        localStorage.setItem(storageKey, raw);
+        storageText = raw;
+      } catch {
+        storageAllowed = false;
+      }
+    }
+  }
+  personal = book;
+  storageCorrupt = false;
+  storageStatus();
+}
+
+const currentPage = () => {
+  const hash = location.hash.slice(1);
+  return has(captions, hash) ? hash : 'overview';
+};
+const monthText = key => key.slice(0, 4) + ' 年 ' + Number(key.slice(5)) + ' 月';
+const option = (value, label, selected) =>
+  '<option value="' + esc(value) + '"' + (value === selected ? ' selected' : '') + '>' + esc(label) + '</option>';
+const supportsCurrencyFlags = CSS.supports('appearance', 'base-select') && CSS.supports('selector(::picker(select))');
+const currencyChoice = (code, label = code + ' · ' + currencies[code][0]) => ({ value: code, code, label });
+const currencyChoices = codes => codes.map(code => currencyChoice(code));
+
+function currencyOptions(choices, selected) {
+  const trigger = supportsCurrencyFlags ? '<button type="button"><selectedcontent></selectedcontent></button>' : '';
+  return trigger + choices.map(({ value, code, label }) => {
+    if (!supportsCurrencyFlags || !code) return option(value, label, selected);
+    return '<option value="' + esc(value) + '"' + (value === selected ? ' selected' : '') + '>' +
+      flagImage(code) + '<span>' + esc(label) + '</span></option>';
+  }).join('');
+}
+
+function currencySelect(attributes, choices, selected) {
+  return '<select ' + attributes + (supportsCurrencyFlags ? ' class="flag-select"' : '') + '>' +
+    currencyOptions(choices, selected) + '</select>';
+}
+
+function monthOptions(book, selected, all = false) {
+  const reference = new Date();
+  reference.setDate(1);
+  const keys = new Set(book.entries.filter(isActive).map(row => row.date.slice(0, 7)));
+  for (let index = 0; index < 12; index++) {
+    keys.add(dateKey(reference).slice(0, 7));
+    reference.setMonth(reference.getMonth() - 1);
+  }
+  if (selected) keys.add(selected);
+  return (all ? option('', '全部月份', selected) : '') +
+    [...keys].sort().reverse().map(key => option(key, monthText(key), selected)).join('');
+}
+
+const sectionHeading = (title, subtitle = '', action = '') =>
+  '<div class="panel-heading"><div><h2>' + title + '</h2>' + (subtitle ? '<p>' + subtitle + '</p>' : '') +
+  '</div>' + action + '</div>';
+const empty = (symbol, title, description = '', action = '') =>
+  '<div class="empty"><span class="empty-icon">' + icon(symbol) + '</span><strong>' + title + '</strong>' +
+  (description ? '<p>' + description + '</p>' : '') + action + '</div>';
+const textAction = (name, label) => '<button type="button" class="text-button" data-action="' + name + '">' + label + '</button>';
+const rightLink = (page, label) => '<a class="text-button" href="#' + page + '">' + label + icon('arrow') + '</a>';
+function spendingControls(book, wallets) {
+  const choices = [{ value: '', code: book.base, label: '全部支出 · ' + book.base },
+    ...[...wallets.keys()].sort().map(code => currencyChoice(code, code + ' 原幣支出'))];
+  return '<div class="spending-controls">' +
+    currencySelect('id="report-currency" aria-label="支出顯示幣別"', choices, spendingCurrency) +
+    '<select id="report-month" aria-label="統計月份">' + monthOptions(book, month) + '</select></div>';
+}
+
+function expenseStats(rows, base) {
+  const monthly = rows.filter(row => row.type === 'expense' && row.date.startsWith(month) &&
+    (!spendingCurrency || row.currency === spendingCurrency));
+  const byCategory = new Map();
+  const byDay = new Map();
+  let total = 0n;
+  for (const row of monthly) {
+    const amount = spendingCurrency ? BigInt(row.amount) : row.cost;
+    total += amount;
+    byCategory.set(row.category, (byCategory.get(row.category) ?? 0n) + amount);
+    byDay.set(row.date, (byDay.get(row.date) ?? 0n) + amount);
+  }
+  return { currency: spendingCurrency || base, total, count: monthly.length, byCategory, byDay };
+}
+
+const noSpending = currency => spendingCurrency ? '這個月還沒有 ' + currencyTag(currency) + ' 消費' : '這個月還沒有消費';
+
+function distribution(stats) {
+  if (!stats.count) return empty('pie', noSpending(stats.currency));
+  const sorted = [...stats.byCategory].sort((a, b) => a[1] === b[1] ? 0 : a[1] < b[1] ? 1 : -1);
+  let accumulated = 0n;
+  const stops = sorted.map(([key, amount]) => {
+    const start = percent(accumulated, stats.total);
+    accumulated += amount;
+    return categories[key][1] + ' ' + start + '% ' + percent(accumulated, stats.total) + '%';
+  });
+  const background = stats.total ? 'conic-gradient(' + stops.join(',') +
+    (stops.length === 1 ? ',' + stops[0] : '') + ')' : '#efebf8';
+  const legend = sorted.map(([key, amount]) => '<div class="legend-row"><span><i style="background:' +
+    categories[key][1] + '"></i>' + categories[key][0] + '</span><strong>' + flaggedNumber(amount, stats.currency) +
+    ' <small>' + percent(amount, stats.total) + '%</small></strong></div>').join('');
+  return '<div class="distribution"><div class="donut" style="background:' + background +
+    '"><span><strong>' + sorted.length + '</strong>個類別</span></div><div class="legend">' + legend + '</div></div>';
+}
+
+function walletsList(wallets, base) {
+  if (!wallets.size) return empty('wallet', '還沒有外幣帳戶', '新增第一筆換匯，就會建立對應的外幣帳戶。',
+    textAction('exchange', '新增第一筆換匯'));
+  return '<div class="wallet-list">' + [...wallets].map(([code, wallet]) => {
+    const [name, symbol, , tone] = currencies[code];
+    const costs = [['手續費前', wallet.beforeFees], ['手續費後', wallet.withFees]].map(([label, basis]) => {
+      const average = averageCostAmount(wallet, code, base, basis);
+      const rate = average === null ? '—' : currencyTag(base) + ' ' + average + ' / ' + currencyTag(code);
+      return '<div class="wallet-basis"><h3>' + label + '</h3><dl><dt>平均成本匯率</dt><dd>' +
+        rate + '</dd><dt>剩餘成本</dt><dd>' + flaggedAmount(balanceCost(wallet, basis), base) + '</dd></dl></div>';
+    }).join('');
+    return '<article class="wallet-item"><div class="wallet-name"><span class="wallet-icon ' + tone +
+      (symbol.length > 2 ? ' long' : '') + '">' + symbol + '</span><div><strong>' + name + '</strong><small>' +
+      currencyTag(code) + '</small></div></div><div class="wallet-value"><strong>' + flaggedNumber(wallet.units, code) +
+      '</strong></div><div class="wallet-costs">' + costs + '</div></article>';
+  }).join('') + '</div>';
+}
+
+function transactionContent(row) {
+  const exchange = row.type === 'exchange';
+  const label = exchange ? '換匯入帳' : categories[row.category][0] + '消費';
+  return '<div class="row-name"><span class="row-icon' + (exchange ? ' tone-green' : '') + '">' +
+    icon(exchange ? 'exchange' : 'receipt') + '</span><div><strong>' + label + '</strong>' +
+    (row.note ? '<small>' + esc(row.note) + '</small>' : '') +
+    transactionLocation(row) + '</div></div>';
+}
+
+function transactionTable(rows, base, actions = false) {
+  const heads = '<th scope="col">日期</th><th scope="col">交易內容</th><th scope="col" class="amount-cell">外幣變動</th>' +
+    '<th scope="col" class="amount-cell">成本（' + currencyTag(base) + '）</th>' +
+    (actions ? '<th scope="col" class="amount-cell">操作</th>' : '');
+  const body = rows.map((row, index) => {
+    const exchange = row.type === 'exchange';
+    const details = exchange && actions ? '<small>本金 ' + flaggedAmount(BigInt(row.principal), row.principalCurrency) +
+      '</small><small>手續費 ' + flaggedAmount(BigInt(row.fee), row.feeCurrency) + '</small>' +
+      Object.entries(row.rates).map(([currency, rate]) => '<small>1 ' + currencyTag(currency) + ' = ' +
+        rateText(rate) + ' ' + currencyTag(base) + '</small>').join('') : '';
+    const detailId = 'transaction-cost-detail-' + index;
+    const kind = exchange ? '換匯' : '消費';
+    const toggle = '<button class="text-button cost-toggle" type="button" data-cost-toggle="' + kind +
+      '" aria-label="展開' + kind + '成本明細" aria-expanded="false" aria-controls="' + detailId + '">' +
+      '<span>明細</span>' + icon('down') + '</button>';
+    const actionsCell = actions ? '<td class="table-actions"><button class="icon-button" type="button" aria-label="編輯交易" data-edit="' +
+      esc(row.id) + '">' + icon('edit') + '</button><button class="icon-button delete" type="button" aria-label="刪除交易" data-delete="' +
+      esc(row.id) + '">' + icon('trash') + '</button></td>' : '';
+    return '<tr class="transaction-row"><td><time datetime="' + row.date + '">' + row.date + '</time></td><td>' + transactionContent(row) +
+      '</td><td class="amount-cell"><strong class="' + (exchange ? 'incoming' : '') + '">' +
+      flaggedAmount(BigInt(row.amount), row.currency, exchange ? '+' : '−') +
+      '</strong>' + (actions ? '<small>交易後 ' + flaggedAmount(row.balance, row.currency) + '</small>' : '') +
+      '</td><td class="amount-cell"><strong>' + flaggedNumber(row.cost, base) + '</strong>' + details + toggle + '</td>' +
+      actionsCell + '</tr>' + transactionCostDetail(row, base, detailId, actions ? 5 : 4);
+  }).join('');
+  return '<div class="table-wrap' + (actions ? '' : ' compact-table') + '" tabindex="0" aria-label="交易表格"><table><thead><tr>' + heads +
+    '</tr></thead><tbody>' + body + '</tbody></table></div>';
+}
+
+function transactionCostDetail(row, base, id, columns) {
+  return '<tr id="' + id + '" class="cost-detail-row" hidden><td colspan="' + columns + '"><dl class="transaction-costs">' +
+    '<div><dt>手續費前成本</dt><dd>' + flaggedAmount(row.costBeforeFees, base) + '</dd></div>' +
+    '<div><dt>手續費後成本</dt><dd>' + flaggedAmount(row.cost, base) + '</dd></div>' +
+    '</dl></td></tr>';
+}
+
+function transactionLocation(row) {
+  const label = row.place || (row.coordinates ? '待補地點名稱' : '');
+  if (!label) return '';
+  return '<small class="record-location">' + icon('pin') + '<span>' + esc(label) + '</span></small>';
+}
+
+function hero(book, stats, wallets) {
+  const note = spendingCurrency ? '按 ' + currencyTag(spendingCurrency) + ' 實際支付金額統計' :
+    '全部消費依外幣取得成本計算，含分攤的換匯手續費';
+  return '<section class="hero"><div class="hero-art" aria-hidden="true"><span class="orbit"></span>' +
+    '<span class="coin coin-eur">€</span><span class="coin coin-usd">$</span><span class="coin coin-jpy">¥</span></div>' +
+    '<p class="scope">' + icon('calendar') + (month === todayMonth() ? '本月支出' : '當月支出') + '</p>' +
+    '<p class="hero-amount">' + number(stats.total, stats.currency) + '<small>' + currencyTag(stats.currency) + '</small></p>' +
+    '<p class="hero-note">' + note + '</p>' + spendingControls(book, wallets) + '</section>';
+}
+
+function metric(symbol, tone, label, value, unit) {
+  return '<div class="metric"><span class="metric-icon ' + tone + '">' + icon(symbol) + '</span><div>' +
+    '<span class="metric-label">' + label + '</span><div class="metric-value">' + value +
+    '<small>' + unit + '</small></div></div></div>';
+}
+
+function overview(book, data, stats) {
+  const totalHolding = [...data.wallets.values()].reduce((total, wallet) => total + balanceCost(wallet), 0n);
+  const latest = data.rows.slice(-5).reverse();
+  return hero(book, stats, data.wallets) + '<div class="metrics">' +
+    metric('wallet', '', '外幣持有成本（含手續費）', number(totalHolding, book.base), currencyTag(book.base)) +
+    metric('layer', 'tone-green', '外幣帳戶', data.wallets.size, '個') +
+    metric('receipt', 'tone-blue', month === todayMonth() ? '本月消費筆數' : '當月消費筆數', stats.count, '筆') +
+    '</div><div class="overview-grid"><section class="panel">' +
+    sectionHeading('外幣帳戶', '依換匯本金與另付手續費計算移動加權平均成本') + walletsList(data.wallets, book.base) +
+    '</section><section class="panel">' +
+    sectionHeading('支出分布', monthText(month) + ' · ' + currencyTag(stats.currency), rightLink('reports', '支出統計')) +
+    distribution(stats) + '</section></div><section class="panel">' +
+    sectionHeading('近期交易', '', rightLink('history', '全部交易')) +
+    (latest.length ? transactionTable(latest, book.base) : empty('list', '還沒有交易紀錄', '換匯和消費會依日期列在這裡。')) +
+    '</section>';
+}
+
+function filterField(label, control) {
+  return '<label class="filter"><span>' + label + '</span>' + control + '</label>';
+}
+
+function history(book, data) {
+  const codeOptions = [...data.wallets.keys()].sort();
+  if (filters.currency && !codeOptions.includes(filters.currency)) filters.currency = '';
+  const filtered = data.rows.filter(row => (!filters.month || row.date.startsWith(filters.month)) &&
+    (!filters.currency || row.currency === filters.currency) && (!filters.type || row.type === filters.type)).reverse();
+  return '<section class="panel"><div class="toolbar"><div class="filters">' +
+    filterField('月份', '<select id="filter-month">' + monthOptions(book, filters.month, true) + '</select>') +
+    filterField('類型', '<select id="filter-type">' + option('', '全部交易', filters.type) +
+      option('exchange', '換匯', filters.type) + option('expense', '消費', filters.type) + '</select>') +
+    filterField('外幣帳戶', currencySelect('id="filter-currency"',
+      [{ value: '', label: '全部幣別' }, ...currencyChoices(codeOptions)], filters.currency)) +
+    '</div><div class="toolbar-links"><p class="count-label">共 ' + filtered.length + ' 筆交易</p>' +
+    rightLink('deleted', '最近刪除') + '</div></div>' +
+    (filtered.length ? transactionTable(filtered, book.base, true) : empty('list', '沒有符合條件的交易',
+      data.rows.length ? '試著調整月份、類型或外幣帳戶。' : '新增換匯或消費後，交易會出現在這裡。')) + '</section>';
+}
+
+function deletedTransactions(book) {
+  const rows = book.entries.filter(row => !isActive(row)).reverse()
+    .sort((left, right) => right.deletedAt.localeCompare(left.deletedAt));
+  const heading = '<div class="toolbar trash-toolbar"><p class="count-label">共 ' + rows.length + ' 筆</p>' +
+    rightLink('history', '回到交易紀錄') + '</div>';
+  if (!rows.length) {
+    return '<section class="panel">' + heading +
+      empty('trash', '最近沒有刪除的交易', '刪除的交易會出現在這裡，可以復原。') + '</section>';
+  }
+  const body = rows.map(row => {
+    const time = '<time datetime="' + row.deletedAt + '">' + deletedTime.format(new Date(row.deletedAt)) + '</time>';
+    return '<tr><td><time datetime="' + row.date + '">' + row.date + '</time></td><td>' + transactionContent(row) +
+      '<small class="deleted-time-mobile">刪除於 ' + time + '</small></td><td class="amount-cell"><strong>' +
+      flaggedAmount(BigInt(row.amount), row.currency) + '</strong></td><td class="deleted-time-column">' + time +
+      '</td><td class="table-actions"><button class="button secondary restore-button" type="button" data-restore="' +
+      esc(row.id) + '">復原</button></td></tr>';
+  }).join('');
+  return '<section class="panel">' + heading + '<div class="table-wrap deleted-table" tabindex="0" aria-label="最近刪除記錄">' +
+    '<table><thead><tr><th scope="col">交易日期</th><th scope="col">交易內容</th>' +
+    '<th scope="col" class="amount-cell">外幣金額</th><th scope="col" class="deleted-time-column">刪除時間</th>' +
+    '<th scope="col" class="amount-cell">操作</th>' +
+    '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
+}
+
+function reports(book, data, stats) {
+  const maximum = [...stats.byDay.values()].reduce((max, amount) => amount > max ? amount : max, 0n);
+  const daily = [...stats.byDay].map(([date, cost]) => '<div class="day"><time datetime="' + date + '">' +
+    Number(date.slice(5, 7)) + '/' + Number(date.slice(8)) + '</time><div class="bar-track" aria-hidden="true">' +
+    '<span style="width:' + percent(cost, maximum) + '%"></span></div><strong>' + flaggedNumber(cost, stats.currency) + '</strong></div>').join('');
+  return hero(book, stats, data.wallets) + '<div class="metrics">' +
+    metric('receipt', '', '消費筆數', stats.count, '筆') +
+    metric('pie', 'tone-green', '消費類別', stats.byCategory.size, '個') +
+    metric('calendar', 'tone-blue', '有消費的日數', stats.byDay.size, '天') +
+    '</div><div class="report-grid"><section class="panel">' + sectionHeading('每日支出', currencyTag(stats.currency)) +
+    (daily ? '<div class="daily-chart">' + daily + '</div>' : empty('calendar', noSpending(stats.currency))) + '</section>' +
+    '<section class="panel">' + sectionHeading('類別分布', currencyTag(stats.currency)) + distribution(stats) + '</section></div>';
+}
+
+function render() {
+  const page = currentPage();
+  const book = personal;
+  const data = calculate(book);
+  if (spendingCurrency && !data.wallets.has(spendingCurrency)) spendingCurrency = '';
+  const stats = expenseStats(data.rows, book.base);
+  for (const link of document.querySelectorAll('[data-page]')) {
+    if (link.dataset.page === page) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
+  byId('page-title').textContent = captions[page][0];
+  byId('page-caption').textContent = captions[page][1];
+  byId('page-actions').hidden = page === 'deleted';
+  byId('view').innerHTML = page === 'overview' ? overview(book, data, stats) :
+    page === 'history' ? history(book, data) : page === 'reports' ? reports(book, data, stats) : deletedTransactions(book);
+}
+
+const formField = (label, input, help = '', full = false) =>
+  '<label class="field' + (full ? ' full' : '') + '"><span>' + label + '</span>' + input +
+  (help ? '<small>' + help + '</small>' : '') + '</label>';
+const textInput = (name, value, placeholder = '', numeric = true, maxLength = numeric ? 15 : 100) => '<input name="' + name +
+  '" value="' + esc(value) + '" placeholder="' + esc(placeholder) +
+  '" autocomplete="off" type="text" maxlength="' + maxLength + '"' + (numeric ? ' inputmode="decimal"' : '') + '>';
+const transactionCurrencySelect = (name, codes, selected) =>
+  currencySelect('name="' + name + '"', currencyChoices(codes), selected);
+
+function transactionLocationField(kind, previous) {
+  return '<div class="location-field"><div class="location-entry">' +
+    formField(kind + '地點（選填）', textInput('place', previous?.place ?? '', '手動輸入地點名稱或地址', false, maxPlaceLength)) +
+    '<button type="button" class="button secondary location-button" id="locate-transaction">' +
+    icon('pin') + '使用目前位置</button></div>' +
+    (previous?.coordinates && !previous.place ?
+      '<button type="button" class="text-button location-existing" id="locate-existing">用原定位查名稱</button>' : '') +
+    '<p class="location-help">查詢需連線，會將定位傳給 Photon。 ' +
+    '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap</a></p>' +
+    '<p class="location-feedback" id="location-feedback" role="status" hidden></p></div>';
+}
+
+function openTransaction(type, previous) {
+  const book = personal;
+  const exchanges = new Set(book.entries.filter(row => row.type === 'exchange' && isActive(row)).map(row => row.currency));
+  if (type === 'expense' && !exchanges.size) {
+    notice('請先新增換匯，建立可以記帳的外幣帳戶。', true);
+    byId('new-exchange').focus();
+    return;
+  }
+  if (storageCorrupt) {
+    notice('請先從「帳本設定」還原備份。', true);
+    return;
+  }
+  const choices = type === 'exchange' ? Object.keys(currencies).filter(code => code !== book.base) : [...exchanges];
+  const currency = previous?.currency ?? (choices.includes('EUR') ? 'EUR' : choices[0]);
+  const exchange = type === 'exchange';
+  const base = book.base;
+  const rateValues = Object.fromEntries(Object.entries(previous?.rates ?? {}).map(([code, rate]) =>
+    ['rate-' + code, rateText(rate)]));
+  transaction = { type, previous, book, rateValues, id: previous?.id ?? (
+    typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint32Array(4))).join('-')
+  ) };
+  byId('transaction-title').textContent = (previous ? '編輯' : '新增') + (exchange ? '換匯' : '消費');
+  byId('transaction-caption').innerHTML = exchange ? '本金與另付手續費會折算為基準貨幣（' + currencyTag(base) + '）。' :
+    '消費成本依交易當日的帳本平均成本分攤。';
+  const fields = [
+    formField('交易日期', '<input type="date" name="date" value="' + (previous?.date ?? dateKey()) + '">'),
+    formField(exchange ? '取得幣別' : '外幣帳戶', transactionCurrencySelect('currency', choices, currency)),
+    formField(exchange ? '實收外幣金額' : '消費外幣金額', textInput('amount',
+      previous ? inputAmount(previous.amount, currency) : '', exchange ? '例如 200' : '例如 50'), '', exchange)
+  ];
+  if (exchange) {
+    const allCurrencies = Object.keys(currencies);
+    const principalCurrency = previous?.principalCurrency ?? base;
+    const feeCurrency = previous?.feeCurrency ?? base;
+    fields.push(
+      formField('本金幣別', transactionCurrencySelect('principalCurrency', allCurrencies, principalCurrency)),
+      formField('換匯本金', textInput('principal', previous ? inputAmount(previous.principal, principalCurrency) : '', '例如 1600')),
+      formField('手續費幣別', transactionCurrencySelect('feeCurrency', allCurrencies, feeCurrency)),
+      formField('另付手續費', textInput('fee', previous ? inputAmount(previous.fee, feeCurrency) : '', '0')),
+      '<div class="form-grid exchange-rates" id="exchange-rates" hidden></div>'
+    );
+  } else {
+    fields.push(formField('消費類別', '<select name="category">' + Object.keys(categories).map(key =>
+      option(key, categories[key][0], previous?.category ?? 'food')).join('') + '</select>'));
+  }
+  fields.push(
+    transactionLocationField(exchange ? '換匯' : '消費', previous),
+    formField('備註（選填）', textInput('note', previous?.note ?? '', exchange ? '例如 首次換匯' : '例如 午餐', false), '', true)
+  );
+  byId('transaction-fields').innerHTML = fields.join('');
+  byId('transaction-error').hidden = true;
+  if (exchange) updateRateFields();
+  byId('locate-transaction').addEventListener('click', () => locateTransaction());
+  byId('locate-existing')?.addEventListener('click', () => locateTransaction(previous.coordinates));
+  updatePreview();
+  byId('transaction-dialog').showModal();
+}
+
+function renderLocationStatus(message, error = false) {
+  const busy = Boolean(transaction.locationRequest);
+  byId('locate-transaction').disabled = busy;
+  const existing = byId('locate-existing');
+  if (existing) existing.disabled = busy;
+  const feedback = byId('location-feedback');
+  feedback.hidden = false;
+  feedback.textContent = message;
+  feedback.classList.toggle('error', error);
+}
+
+function devicePosition() {
+  const unavailable = '目前無法取得位置，可以手動輸入店名或地址。';
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error(unavailable));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      if (validCoordinates(coords)) resolve(coords);
+      else reject(new Error(unavailable));
+    }, error => {
+      const messages = {
+        1: '瀏覽器未允許定位，可以手動輸入店名或地址。',
+        3: '定位逾時，可以重試或手動輸入店名或地址。'
+      };
+      reject(new Error(messages[error.code] ?? unavailable));
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+  });
+}
+
+async function nearbyPlace(point, controller) {
+  const url = new URL('https://photon.komoot.io/reverse');
+  url.search = new URLSearchParams({
+    lat: point.latitude.toFixed(5), lon: point.longitude.toFixed(5), radius: '0.15', limit: '3', lang: 'default',
+    layer: 'house'
+  });
+  const timer = window.setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal, credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'no-store'
+    });
+    if (!response.ok) throw new Error('Place lookup failed');
+    const result = await response.json();
+    const features = Array.isArray(result?.features) ? result.features : [];
+    for (const feature of features) {
+      const properties = feature?.properties;
+      if (!properties || (properties.type && properties.type !== 'house')) continue;
+      const text = key => typeof properties[key] === 'string' ? properties[key].trim() : '';
+      const street = text('street');
+      const house = text('housenumber');
+      const name = text('name') || (street && house ? [text('city'), street, house].filter(Boolean).join(' ') : '');
+      if (name) return name.slice(0, maxPlaceLength);
+    }
+    return '';
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+async function locateTransaction(savedPoint) {
+  const draft = transaction;
+  const dialog = byId('transaction-dialog');
+  const place = byId('transaction-form').elements.place;
+  const inputBeforeLookup = place.value;
+  const request = new AbortController();
+  draft.locationRequest = request;
+  const stillEditing = () => transaction === draft && dialog.open && draft.locationRequest === request;
+  let message;
+  let error = false;
+  try {
+    if (!savedPoint) renderLocationStatus('正在取得目前位置…');
+    const point = savedPoint ?? await devicePosition();
+    if (!stillEditing()) return;
+    renderLocationStatus('正在查詢附近地點名稱…');
+    let name;
+    try {
+      name = await nearbyPlace(point, request);
+    } catch {
+      throw new Error('目前無法查詢地點名稱，可以手動輸入店名或地址。');
+    }
+    if (!stillEditing()) return;
+    if (!name) throw new Error('找不到附近的地點名稱，可以手動輸入店名或地址。');
+    if (place.value === inputBeforeLookup) {
+      place.value = name;
+      message = '已填入附近地點，請確認店名或地址。';
+    } else {
+      message = '查到附近地點「' + name + '」。';
+    }
+  } catch (failure) {
+    error = true;
+    message = failure.message;
+  } finally {
+    if (stillEditing()) {
+      draft.locationRequest = undefined;
+      renderLocationStatus(message, error);
+    }
+  }
+}
+
+function updateRateFields() {
+  if (transaction.type !== 'exchange') return;
+  const { base } = transaction.book;
+  const fields = byId('transaction-form').elements;
+  const hasFee = /[1-9]/.test(fields.fee.value);
+  const required = paymentRateCurrencies(fields.principalCurrency.value, fields.feeCurrency.value, hasFee, base);
+  const block = byId('exchange-rates');
+  const key = required.join(',');
+  if (block.dataset.currencies === key) return;
+  for (const input of block.querySelectorAll('input')) {
+    transaction.rateValues[input.name] = input.value;
+  }
+  block.dataset.currencies = key;
+  block.hidden = !required.length;
+  block.innerHTML = required.map(currency => {
+    const name = 'rate-' + currency;
+    return formField('1 ' + currencyTag(currency) + ' 折合多少 ' + currencyTag(base),
+      textInput(name, transaction.rateValues[name] ?? '', '輸入這筆交易的匯率', true, 25));
+  }).join('');
+}
+
+function draftBook() {
+  const { book, previous, type, id } = transaction;
+  const fields = new FormData(byId('transaction-form'));
+  const date = fields.get('date');
+  const currency = fields.get('currency');
+  if (!validDate(date)) throw new Error('請輸入有效的交易日期。');
+  const amount = readAmount(fields.get('amount'), currency, '外幣金額');
+  const row = { id, type, date, currency, amount, note: fields.get('note').trim() };
+  if (type === 'exchange') {
+    row.principalCurrency = fields.get('principalCurrency');
+    row.feeCurrency = fields.get('feeCurrency');
+    row.principal = readAmount(fields.get('principal'), row.principalCurrency, '換匯本金');
+    row.fee = readAmount(fields.get('fee').trim() || '0', row.feeCurrency, '手續費', true);
+    const required = paymentRateCurrencies(row.principalCurrency, row.feeCurrency, BigInt(row.fee) > 0n, book.base);
+    row.rates = Object.fromEntries(required.map(code => [code, readRate(fields.get('rate-' + code), code, book.base)]));
+  } else {
+    row.category = fields.get('category');
+  }
+  const place = fields.get('place').trim();
+  if (place) row.place = place;
+  else if (previous?.coordinates && !previous.place) row.coordinates = previous.coordinates;
+  const entries = previous ? book.entries.map(entry => entry.id === id ? row : entry) : [...book.entries, row];
+  return { ...book, entries };
+}
+
+function updatePreview() {
+  const element = byId('transaction-preview');
+  element.hidden = true;
+  try {
+    const book = draftBook();
+    const row = calculate(book).rows.find(entry => entry.id === transaction.id);
+    const label = row.type === 'exchange' ? '本次換匯總成本' : '本筆消費成本';
+    element.innerHTML = label + '　' + flaggedAmount(row.cost, book.base) + '　｜　交易後餘額 ' +
+      flaggedAmount(row.balance, row.currency);
+    element.hidden = false;
+  } catch {
+    // Incomplete inputs are expected while typing. Submit displays actionable validation errors.
+  }
+}
+
+function saveTransaction(event) {
+  event.preventDefault();
+  const errorBox = byId('transaction-error');
+  try {
+    if (transaction.book !== personal) throw new Error('帳本已更新，請關閉視窗後重新編輯。');
+    const book = draftBook();
+    calculate(book);
+    saveBook(book);
+    const label = transaction.previous ? '已更新交易。' : transaction.type === 'exchange' ? '已新增換匯。' : '已新增消費。';
+    byId('transaction-dialog').close();
+    render();
+    savedNotice(label);
+  } catch (error) {
+    errorBox.innerHTML = currencyText(error.message);
+    errorBox.hidden = false;
+  }
+}
+
+function savedNotice(message) {
+  notice(storageAllowed ? message : message + ' 瀏覽器目前無法儲存，請在關閉前匯出備份。', !storageAllowed);
+}
+
+function askToConfirm(title, caption, actionLabel, action) {
+  byId('confirm-title').textContent = title;
+  byId('confirm-caption').innerHTML = currencyText(caption);
+  byId('confirm-action').textContent = actionLabel;
+  confirmation = action;
+  byId('confirm-dialog').showModal();
+}
+
+function deleteTransaction(id) {
+  const book = personal;
+  const row = book.entries.find(entry => entry.id === id && isActive(entry));
+  if (!row) return;
+  const type = row.type === 'exchange' ? '換匯' : '消費';
+  askToConfirm('刪除這筆' + type + '？', row.date + ' 的 ' + money(BigInt(row.amount), row.currency) +
+    ' ' + type + '將移至「最近刪除」，可以復原。後續交易會重新計算。', '移至最近刪除', () => {
+    if (book !== personal) throw new Error('帳本已更新，請重新確認交易後再刪除。');
+    const deletedAt = new Date().toISOString();
+    const updated = { ...book, entries: book.entries.map(entry => entry === row ? { ...entry, deletedAt } : entry) };
+    calculate(updated);
+    saveBook(updated);
+    render();
+    savedNotice('已移至「最近刪除」，可以從那裡復原。');
+  });
+}
+
+function restoreTransaction(id) {
+  const book = personal;
+  const row = book.entries.find(entry => entry.id === id && !isActive(entry));
+  if (!row) return;
+  const restored = { ...row };
+  delete restored.deletedAt;
+  // Keep the original position so same-day transactions use their original recording order.
+  const updated = { ...book, entries: book.entries.map(entry => entry === row ? restored : entry) };
+  try {
+    calculate(updated);
+    saveBook(updated);
+    render();
+    const view = byId('view');
+    (view.querySelector('[data-restore]') ?? view.querySelector('a'))?.focus();
+    savedNotice('已復原交易，餘額與成本已重新計算。');
+  } catch (error) {
+    notice('無法復原這筆交易。' + error.message, true);
+  }
+}
+
+function updateSettings() {
+  const select = byId('base-currency');
+  select.classList.toggle('flag-select', supportsCurrencyFlags);
+  select.innerHTML = currencyOptions(currencyChoices(Object.keys(currencies)), personal.base);
+  select.disabled = personal.entries.length > 0 || storageCorrupt;
+  byId('base-help').textContent = storageCorrupt ? '請先匯入個人帳本備份。' :
+    personal.entries.some(isActive) ? '帳本已有交易，基準貨幣已固定。' :
+      personal.entries.length ? '仍有可復原的交易，基準貨幣已固定。' : '用來計算換匯成本與統計支出。';
+}
+
+function settingsError(message) {
+  const element = byId('settings-error');
+  element.hidden = !message;
+  element.innerHTML = currencyText(message);
+}
+
+function exportData() {
+  if (storageCorrupt) {
+    settingsError('本機帳本無法讀取。請匯入可用的備份。');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(personal, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'study-ledger-backup-' + dateKey() + '.json';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+async function importData(event) {
+  const [file] = event.target.files;
+  event.target.value = '';
+  if (!file) return;
+  settingsError('');
+  try {
+    let parsed;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch {
+      throw new Error('無法讀取這個 JSON 檔。');
+    }
+    const restored = validateBook(parsed);
+    const activeEntries = restored.entries.filter(isActive);
+    const deletedCount = restored.entries.length - activeEntries.length;
+    const summary = activeEntries.length + ' 筆交易' + (deletedCount ? '及 ' + deletedCount + ' 筆最近刪除的交易' : '');
+    const source = personal;
+    const apply = () => {
+      if (source !== personal) throw new Error('帳本已更新，請重新匯入備份。');
+      saveBook(restored, true);
+      month = activeEntries.reduce((latest, row) =>
+        row.date.slice(0, 7) > latest ? row.date.slice(0, 7) : latest, '') || todayMonth();
+      spendingCurrency = '';
+      filters = { month: '', type: '', currency: '' };
+      updateSettings();
+      render();
+      byId('settings-dialog').close();
+      notice('已匯入 ' + summary + '。' +
+        (storageAllowed ? '' : ' 目前的瀏覽器僅能暫存帳本。'), !storageAllowed);
+    };
+    if (personal.entries.length || storageCorrupt) {
+      askToConfirm('用備份取代我的帳本？', '備份含有 ' + summary +
+        '。匯入後會取代目前帳本的全部資料。', '取代並匯入', apply);
+    } else {
+      apply();
+    }
+  } catch (error) {
+    settingsError(error.message);
+  }
+}
+
+for (const element of document.querySelectorAll('[data-icon]')) {
+  element.innerHTML = icon(element.dataset.icon);
+}
+for (const button of document.querySelectorAll('[data-close]')) {
+  button.addEventListener('click', () => button.closest('dialog').close());
+}
+try {
+  loadLocal(localStorage.getItem(storageKey));
+} catch {
+  storageAllowed = false;
+  storageStatus();
+}
+
+byId('new-exchange').addEventListener('click', () => openTransaction('exchange'));
+byId('new-expense').addEventListener('click', () => openTransaction('expense'));
+byId('transaction-dialog').addEventListener('close', event => {
+  if (!event.currentTarget.open) transaction?.locationRequest?.abort();
+});
+byId('transaction-form').addEventListener('submit', saveTransaction);
+byId('transaction-form').addEventListener('input', () => {
+  byId('transaction-error').hidden = true;
+  updateRateFields();
+  updatePreview();
+});
+byId('view').addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button) return;
+  if (button.dataset.action === 'exchange') openTransaction('exchange');
+  if (button.dataset.edit) {
+    const row = personal.entries.find(entry => entry.id === button.dataset.edit && isActive(entry));
+    if (row) openTransaction(row.type, row);
+  }
+  if (button.dataset.delete) deleteTransaction(button.dataset.delete);
+  if (button.dataset.restore) restoreTransaction(button.dataset.restore);
+  if (button.hasAttribute('data-cost-toggle')) {
+    const detail = byId(button.getAttribute('aria-controls'));
+    const expanded = detail.hidden;
+    detail.hidden = !expanded;
+    button.setAttribute('aria-expanded', String(expanded));
+    button.setAttribute('aria-label', (expanded ? '收合' : '展開') + button.dataset.costToggle + '成本明細');
+    button.querySelector('span').textContent = expanded ? '收合' : '明細';
+  }
+});
+byId('view').addEventListener('change', event => {
+  const select = event.target;
+  if (select.id === 'report-month') month = select.value;
+  else if (select.id === 'report-currency') spendingCurrency = select.value;
+  else if (select.id.startsWith('filter-')) filters[select.id.slice(7)] = select.value;
+  else return;
+  render();
+  byId(select.id)?.focus();
+});
+byId('open-settings').addEventListener('click', () => {
+  updateSettings();
+  settingsError('');
+  byId('settings-dialog').showModal();
+});
+byId('base-currency').addEventListener('change', event => {
+  settingsError('');
+  try {
+    if (personal.entries.length) throw new Error('帳本已有交易，基準貨幣已固定。');
+    saveBook(emptyBook(event.target.value));
+    render();
+    if (!storageAllowed) settingsError('瀏覽器目前無法儲存，請在關閉前匯出備份。');
+  } catch (error) {
+    updateSettings();
+    settingsError(error.message);
+  }
+});
+byId('export-data').addEventListener('click', exportData);
+byId('import-data').addEventListener('click', () => byId('backup-file').click());
+byId('backup-file').addEventListener('change', importData);
+byId('confirm-action').addEventListener('click', () => {
+  byId('confirm-dialog').close();
+  try {
+    confirmation?.();
+  } catch (error) {
+    if (byId('settings-dialog').open) settingsError(error.message);
+    else notice(error.message, true);
+  }
+});
+window.addEventListener('hashchange', () => {
+  render();
+  window.scrollTo(0, 0);
+});
+window.addEventListener('storage', event => {
+  if (storageAllowed && (event.key === storageKey || event.key === null)) {
+    loadLocal(event.newValue);
+    if (byId('settings-dialog').open) updateSettings();
+    render();
+  }
+});
+render();
+
+  </script>
+</body>
+</html>
