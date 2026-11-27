@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>留子记账隐私权政策</title>
+  <style>
+    html { color-scheme: light dark }
+    body { margin: 0 auto; max-width: 44rem; padding: 2rem 1.25rem 3rem; font: 1rem/1.75 system-ui, sans-serif }
+    h1, h2 { line-height: 1.35 }
+    h2 { margin-top: 1.75rem; font-size: 1.2rem }
+    a { overflow-wrap: anywhere }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>留子记账隐私权政策</h1>
+    <p>本政策适用于由 GitHub 开发者 aumaric736 维护的留子记账（留学生专用版）。应用内名称为留学帐本，Android 包名为 <code>account.app</code>。更新日期为 <time datetime="2026-11-27">2026 年 11 月 27 日</time>。</p>
+
+    <h2>账本和应用设置</h2>
+    <p>应用在设备的应用专用存储中保存你输入的消费、换汇、金额、币别、汇率、手续费、日期、分类、备注、地点和语言等设置，用于计算余额、成本和支出统计。应用无需注册或登录，开发者没有用于接收或同步你的账本的服务器。应用不接入广告或使用分析服务。</p>
+
+    <h2>可选定位与地点查询</h2>
+    <p>如果你在新增或编辑消费、换汇时点选「使用当前位置」并允许定位，应用会读取设备位置，并通过 HTTPS 将经纬度发送给由 Komoot 提供的 Photon 服务，以查询附近的地名或地址。服务端会收到经纬度，并可获知发起请求的 IP 地址。请求不含消费金额、备注或账本内容。Photon 服务端如何处理或保留请求由其运营方决定。<a href="https://github.com/komoot/photon">Photon 项目说明</a></p>
+    <p>你也可以在设备设置里关闭定位权限，使用手动输入地址或留空。使用地点查询时，新交易保存你确认的地名或地址。旧版本备份如含有坐标，导入后可能随旧交易保留在设备上。</p>
+
+    <h2>导入、导出与分享</h2>
+    <p>你主动导入时，应用读取你选中的 JSON 备份。主动导出时，应用在设备缓存中生成可读取的 JSON 备份，再打开 Android 分享面板。由你决定备份存放的位置或接收方。其他应用或接收方取得文件后，会按各自的方式处理该文件。</p>
+
+    <h2>保留与删除</h2>
+    <p>账本保存在设备上。删除单笔交易会将它移到「最近删除」，以便恢复。你可以通过 Android 系统设置清除应用存储空间，或卸载应用，以移除本机账本、设置及应用缓存。在其他位置保存或分享过的备份，请在相应位置另行删除。</p>
+
+    <h2>隐私问题联系</h2>
+    <p>如有隐私问题，可通过项目的 GitHub Issues 联系维护者。请在公开讨论中只说明问题类型，并避免附上账本、坐标、密码或个人资料。<a href="https://github.com/aumaric736/Accounting-software/issues">联系项目维护者</a></p>
+  </main>
+</body>
+</html>
